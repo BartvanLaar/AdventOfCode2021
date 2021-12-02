@@ -2,8 +2,6 @@
 {
     public class Program
     {
-
-
         public static void Main(params string[] args)
         {
             Console.WriteLine("Hello world, today there are 2 challenges!");
