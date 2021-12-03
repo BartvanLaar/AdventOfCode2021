@@ -9,14 +9,6 @@
             ChallengeOne();
             ChallengeTwo();
         }
-        //const string INPUT_FILE_NAME = "InputDataChallenge1.txt";
-        //var inputData = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), INPUT_FILE_NAME));
-        //var data = inputData.Split(Environment.NewLine, StringSplitOptions.TrimEntries);
-
-        //Console.WriteLine("How many measurements are larger than the previous measurement?");
-        //    var result = data.Skip(1).Where((d, i) => int.Parse(d) > int.Parse(data[i])).Count();
-        //Console.WriteLine($"Answer is: {result}.");
-
 
         public static void ChallengeOne()
         {
