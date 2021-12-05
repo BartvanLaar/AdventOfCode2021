@@ -66,33 +66,23 @@
             return CheckRows(board, playedNumbers) || CheckColumns(board, playedNumbers);
         }
 
-        private static bool CheckColumns(List<int[]> board, List<int> playedNumbers)
-        {
-            var rowLength = board.First().Length;
-
-            foreach (var index in Enumerable.Range(0, rowLength))
-            {
-                var colValues = board.Select(n => n[index]);
-                if (!colValues.Except(playedNumbers).Any())
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         private static bool CheckRows(List<int[]> board, List<int> playedNumbers)
         {
-            foreach (var row in board)
-            {
-                if (!row.Except(playedNumbers).Any())
-                {
-                    return true;
-                }
-            }
+            return board
+                .Select(row => row
+                    .Except(playedNumbers)
+                    .Any())
+                .Any(checkedLeft => !checkedLeft);
+        }
 
-            return false;
+        private static bool CheckColumns(List<int[]> board, List<int> playedNumbers)
+        {
+            return Enumerable
+                .Range(0, board.First().Length)
+                .Select(index => board.Select(n => n[index])
+                    .Except(playedNumbers)
+                    .Any())
+                .Any(checkedLeft => !checkedLeft);
         }
 
         private static void ChallengeTwo()
