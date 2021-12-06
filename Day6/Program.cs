@@ -1,4 +1,6 @@
-﻿namespace Day6
+﻿using System.Diagnostics;
+
+namespace Day6
 {
     public class Program
     {
@@ -42,10 +44,12 @@
 
         private static void ChallengeTwo()
         {
+            var sw = new Stopwatch();
             const string INPUT_FILE_NAME = "InputDataChallenge2.txt";
             var inputData = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), INPUT_FILE_NAME));
             IEnumerable<string> stringData = inputData.Split(Environment.NewLine, StringSplitOptions.TrimEntries);
             var fishes = stringData.SelectMany(n => n.Split(",").Select(n => int.Parse(n))).ToArray();
+            sw.Start();
 
             var nrOfDays = 256;
             var amountOfFishesAtCertainAgeInDaysMapping = Enumerable.Range(0, 9).Select(_ => 0L).ToList();
@@ -65,7 +69,8 @@
                 amountOfFishesAtCertainAgeInDaysMapping[FISH_REINCARNATION_INDEX] += amountOfFishThatReincarnate;
                 amountOfFishesAtCertainAgeInDaysMapping.Add(amountOfFishThatReincarnate);
             }
-
+            sw.Stop();
+            Console.WriteLine($"Took {sw.ElapsedMilliseconds} ms after reading in the start data.");
             Console.WriteLine($"At the start there were {fishes.Length} lantern fishes!");
             Console.WriteLine($"After {nrOfDays} days there are a total of {amountOfFishesAtCertainAgeInDaysMapping.Sum()} lantern fishes!");
 
