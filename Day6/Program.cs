@@ -69,10 +69,11 @@ namespace Day6
                 amountOfFishesAtCertainAgeInDaysMapping[FISH_REINCARNATION_INDEX] += amountOfFishThatReincarnate;
                 amountOfFishesAtCertainAgeInDaysMapping.Add(amountOfNewFish);
             }
+            var sum = amountOfFishesAtCertainAgeInDaysMapping.Sum();
             sw.Stop();
-            Console.WriteLine($"Took {sw.ElapsedMilliseconds} ms after reading in the start data.");
+            Console.WriteLine($"Took {sw.ElapsedTicks / (TimeSpan.TicksPerMillisecond / 1000)} μs after reading in the start data.");
             Console.WriteLine($"At the start there were {fishes.Length} lantern fishes!");
-            Console.WriteLine($"After {nrOfDays} days there are a total of {amountOfFishesAtCertainAgeInDaysMapping.Sum()} lantern fishes!");
+            Console.WriteLine($"After {nrOfDays} days there are a total of {sum} lantern fishes!");
 
         }
     }
