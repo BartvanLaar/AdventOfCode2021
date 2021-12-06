@@ -36,7 +36,7 @@
                 amountOfFishesAtCertainAgeInDaysMapping.Add(amountOfFishThatReincarnate);
             }
 
-            Console.WriteLine($"At the start there were {fishes.Count} lantern fishes!");
+            Console.WriteLine($"At the start there were {fishes.Length} lantern fishes!");
             Console.WriteLine($"After {nrOfDays} days there are a total of {amountOfFishesAtCertainAgeInDaysMapping.Sum()} lantern fishes!");
         }
 
@@ -66,7 +66,7 @@
                 amountOfFishesAtCertainAgeInDaysMapping.Add(amountOfFishThatReincarnate);
             }
 
-            Console.WriteLine($"At the start there were {fishes.Count} lantern fishes!");
+            Console.WriteLine($"At the start there were {fishes.Length} lantern fishes!");
             Console.WriteLine($"After {nrOfDays} days there are a total of {amountOfFishesAtCertainAgeInDaysMapping.Sum()} lantern fishes!");
 
         }
