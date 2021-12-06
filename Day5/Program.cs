@@ -145,7 +145,7 @@
 
             }
 
-            PrintDiagram(diagram); // only use this with the puzzle sample size...
+            //PrintDiagram(diagram); // only use this with the puzzle sample size...
             var result = diagram.SelectMany(x => x.Select(y => y)).Count(z => z >= 2);
             Console.WriteLine($"Amount of points where at least 2 lines overlap: {result}.");
         }
