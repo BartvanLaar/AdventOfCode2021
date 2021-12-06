@@ -35,7 +35,7 @@ namespace Day6
                 var amountOfNewFish = amountOfFishThatReincarnate;
                 amountOfFishesAtCertainAgeInDaysMapping.RemoveAt(FISH_REBIRTH_INDEX);
                 amountOfFishesAtCertainAgeInDaysMapping[FISH_REINCARNATION_INDEX] += amountOfFishThatReincarnate;
-                amountOfFishesAtCertainAgeInDaysMapping.Add(amountOfFishThatReincarnate);
+                amountOfFishesAtCertainAgeInDaysMapping.Add(amountOfNewFish);
             }
 
             Console.WriteLine($"At the start there were {fishes.Length} lantern fishes!");
@@ -67,7 +67,7 @@ namespace Day6
                 var amountOfNewFish = amountOfFishThatReincarnate;
                 amountOfFishesAtCertainAgeInDaysMapping.RemoveAt(FISH_REBIRTH_INDEX);
                 amountOfFishesAtCertainAgeInDaysMapping[FISH_REINCARNATION_INDEX] += amountOfFishThatReincarnate;
-                amountOfFishesAtCertainAgeInDaysMapping.Add(amountOfFishThatReincarnate);
+                amountOfFishesAtCertainAgeInDaysMapping.Add(amountOfNewFish);
             }
             sw.Stop();
             Console.WriteLine($"Took {sw.ElapsedMilliseconds} ms after reading in the start data.");
