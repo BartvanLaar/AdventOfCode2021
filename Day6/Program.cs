@@ -15,7 +15,7 @@
             const string INPUT_FILE_NAME = "InputDataChallenge1.txt";
             var inputData = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), INPUT_FILE_NAME));
             IEnumerable<string> stringData = inputData.Split(Environment.NewLine, StringSplitOptions.TrimEntries);
-            var fishes = stringData.SelectMany(n => n.Split(",").Select(n => int.Parse(n))).ToList();
+            var fishes = stringData.SelectMany(n => n.Split(",").Select(n => int.Parse(n))).ToArray();
 
             var nrOfDays = 80;
             var amountOfFishesAtCertainAgeInDaysMapping = Enumerable.Range(0, 9).Select(_ => 0L).ToList();
@@ -29,8 +29,8 @@
             const int FISH_REINCARNATION_INDEX = 6;
             for (var i = 0; i < nrOfDays; i++)
             {
-                var amountOfNewFish = amountOfFishesAtCertainAgeInDaysMapping[FISH_REBIRTH_INDEX];
-                var amountOfFishThatReincarnate = amountOfNewFish;
+                var amountOfFishThatReincarnate = amountOfFishesAtCertainAgeInDaysMapping[FISH_REBIRTH_INDEX];
+                var amountOfNewFish = amountOfFishThatReincarnate;
                 amountOfFishesAtCertainAgeInDaysMapping.RemoveAt(FISH_REBIRTH_INDEX);
                 amountOfFishesAtCertainAgeInDaysMapping[FISH_REINCARNATION_INDEX] += amountOfFishThatReincarnate;
                 amountOfFishesAtCertainAgeInDaysMapping.Add(amountOfFishThatReincarnate);
@@ -45,7 +45,7 @@
             const string INPUT_FILE_NAME = "InputDataChallenge2.txt";
             var inputData = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), INPUT_FILE_NAME));
             IEnumerable<string> stringData = inputData.Split(Environment.NewLine, StringSplitOptions.TrimEntries);
-            var fishes = stringData.SelectMany(n => n.Split(",").Select(n => int.Parse(n))).ToList();
+            var fishes = stringData.SelectMany(n => n.Split(",").Select(n => int.Parse(n))).ToArray();
 
             var nrOfDays = 256;
             var amountOfFishesAtCertainAgeInDaysMapping = Enumerable.Range(0, 9).Select(_ => 0L).ToList();
@@ -59,8 +59,8 @@
             const int FISH_REINCARNATION_INDEX = 6;
             for (var i = 0; i < nrOfDays; i++)
             {
-                var amountOfNewFish = amountOfFishesAtCertainAgeInDaysMapping[FISH_REBIRTH_INDEX];
-                var amountOfFishThatReincarnate = amountOfNewFish;
+                var amountOfFishThatReincarnate  = amountOfFishesAtCertainAgeInDaysMapping[FISH_REBIRTH_INDEX];
+                var amountOfNewFish = amountOfFishThatReincarnate;
                 amountOfFishesAtCertainAgeInDaysMapping.RemoveAt(FISH_REBIRTH_INDEX);
                 amountOfFishesAtCertainAgeInDaysMapping[FISH_REINCARNATION_INDEX] += amountOfFishThatReincarnate;
                 amountOfFishesAtCertainAgeInDaysMapping.Add(amountOfFishThatReincarnate);
