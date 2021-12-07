@@ -21,15 +21,14 @@ namespace Day7
             IEnumerable<int> intData = stringData.SelectMany(s => s.Split(",").Select(i => int.Parse(i)));
             sw.Start();
 
-            var results = intData.GroupBy(i => i).Select(i => (Value: i.First(), Count: i.Count())).OrderBy(i => i.Value).ToArray();
+            var results = intData.GroupBy(i => i).Select(i => (Value: i.First(), Count: i.Count()));
+            var maxIndex = results.MaxBy(x => x.Value).Value;
+
             var currentFuelCount = int.MaxValue;
-            foreach (var index in Enumerable.Range(0, results.Last().Value))
+            for (var index = 0; index < maxIndex; index++)
             {
                 var newFuelCount = results.Sum(r => Math.Abs(r.Value - index) * r.Count);
-                if (newFuelCount < currentFuelCount)
-                {
-                    currentFuelCount = newFuelCount;
-                }
+                currentFuelCount = newFuelCount < currentFuelCount ? newFuelCount : currentFuelCount;
             }
 
             sw.Stop();
@@ -46,30 +45,37 @@ namespace Day7
             IEnumerable<int> intData = stringData.SelectMany(s => s.Split(",").Select(i => int.Parse(i)));
             sw.Start();
 
-            var results = intData.GroupBy(i => i).Select(i => (Value: i.First(), Count: i.Count())).OrderBy(i => i.Value).ToArray();
+            var results = intData.GroupBy(i => i).Select(i => (Value: i.First(), Count: i.Count()));
+            var maxIndex = results.MaxBy(x => x.Value).Value;
             var currentFuelCount = int.MaxValue;
-            foreach(var index in Enumerable.Range(0, results.Last().Value))
-            {
-                var newFuelCount = results.Sum(r =>
-                {
-                    var value = Math.Abs(r.Value - index);
-                    return FakeFactorial(value) * r.Count;
-                });
 
-                if (newFuelCount < currentFuelCount)
-                {
-                    currentFuelCount = newFuelCount;
-                }
+            for (var index = 0; index < maxIndex; index++)
+            {
+                var newFuelCount = results.Sum(r => FakeFactorial2(Math.Abs(r.Value - index)) * r.Count);
+                currentFuelCount = newFuelCount < currentFuelCount ? newFuelCount : currentFuelCount;
             }
 
             sw.Stop();
             Console.WriteLine($"Answer is {currentFuelCount}");
             Console.WriteLine($"Took {sw.ElapsedMilliseconds} ms after reading in the start data.");
         }
-
+        
+        // Apparently this recursion method is slow...
         public static int FakeFactorial(int n)
         {
             return n == 0 ? 0 : n + FakeFactorial(n - 1);
         }
+        
+        // This is much faster!
+        public static int FakeFactorial2(int n)
+        {
+            var sum = 0;
+            for (var i = 0; i <= n; i++)
+            {
+                sum += i;
+            }
+            return sum;
+        }
+
     }
 }
