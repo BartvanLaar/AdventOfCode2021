@@ -41,31 +41,57 @@ namespace Day8
             });
 
             sw.Stop();
+            Console.WriteLine($"Result is {outputData}");
             Console.WriteLine($"Took {sw.ElapsedMilliseconds} ms after reading in the start data.");
         }
 
         private static int Decode(string[] input, string[] outputToDecode)
         {
             const int ONE_CHAR_LENGTH = 2;
+            const int TWO_CHAR_LENGTH = 5;
             const int FOUR_CHAR_LENGTH = 4;
+            const int THREE_CHAR_LENGTH = 5;
             const int FIVE_CHAR_LENGTH = 5;
             const int SIX_CHAR_LENGTH = 6;
             const int SEVEN_CHAR_LENGTH = 3;
             const int EIGHT_CHAR_LENGTH = 7;
+            const int NINE_CHAR_LENGTH = 6;
+            const int ZERO_CHAR_LENGTH = 6;
 
-            var oneEncodedAsString = input.First(s => s.Length == ONE_CHAR_LENGTH);
-            var sevenEncodedAsString = input.First(s => s.Length == SEVEN_CHAR_LENGTH);
-            var fourEncodedAsString = input.First(s => s.Length == FOUR_CHAR_LENGTH);
-            var eightEncodedAsString = input.First(s => s.Length == EIGHT_CHAR_LENGTH);
+            // refactor so this doesnt use other numbers unless absolutely necessary
 
-            var topRowOfDisplay = new string(sevenEncodedAsString.Except(oneEncodedAsString).ToArray());
-            var middleRowAndTopLeftOfDisplay = new string(fourEncodedAsString.Except(oneEncodedAsString).ToArray());
+            var one = input.First(s => s.Length == ONE_CHAR_LENGTH);
+            var four = input.First(s => s.Length == FOUR_CHAR_LENGTH);
+            var seven = input.First(s => s.Length == SEVEN_CHAR_LENGTH);
+            var eight = input.First(s => s.Length == EIGHT_CHAR_LENGTH);
+            
+            var topRow = new string(seven.Except(one).ToArray());
+            var bottomRowAndBottomLeft = new string(eight.Except(seven).Except(four).ToArray());
+            var middleRowAndTopLeft = new string(four.Except(one).ToArray());
 
-            // contains doesnt work in this case.. need to check for individual characters.. perhaps use .except?
-            var five = input.First(s => !s.Contains(fourEncodedAsString) && s.Length == FIVE_CHAR_LENGTH);
-            var six = input.First(s => !s.Contains(fourEncodedAsString) && s.Length == SIX_CHAR_LENGTH);
+            var five = input.First(s => s.Except(four).Count() == 2 && s.Length == FIVE_CHAR_LENGTH);
+            var nine = new string(five.Concat(one).Distinct().ToArray());
+            var leftUnder = new string(eight.Except(nine).ToArray());
+            var six = new string(five.Concat(leftUnder).ToArray());
+            var bottomRow = new string(eight.Except(leftUnder).ToArray());
+            var three = new string()
+            var zero = input.First(s => s.Except(six).Any() && s.Except(three).Count() == 2 && s.Length == ZERO_CHAR_LENGTH);
+            var two = input.First(s => s.Except(five).Any() && !s.Concat(four).Distinct().Except(eight).Any() && s.Length == TWO_CHAR_LENGTH);
 
-            return 0;
+            var mappings = new (string Mapping, int Value)[] { (zero, 0), (one, 1), (two, 2), (three, 3), (four, 4), (five, 5), (six, 6), (seven, 7), (eight, 8), (nine, 9) };
+            var result = string.Empty;
+            foreach (var o in outputToDecode)
+            {
+                foreach (var mapping in mappings)
+                {
+                    if (!o.Except(mapping.Mapping).Any())
+                    {
+                        result += mapping.Value;
+                        break;
+                    }
+                }
+            }
+            return int.Parse(result);
 
         }
 
