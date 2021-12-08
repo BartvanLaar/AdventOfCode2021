@@ -51,7 +51,7 @@ namespace Day7
 
             for (var index = 0; index < maxIndex; index++)
             {
-                var newFuelCount = results.Sum(r => FakeFactorial2(Math.Abs(r.Value - index)) * r.Count);
+                var newFuelCount = results.Sum(r => FakeFactorial3(Math.Abs(r.Value - index)) * r.Count);
                 currentFuelCount = newFuelCount < currentFuelCount ? newFuelCount : currentFuelCount;
             }
 
@@ -76,6 +76,12 @@ namespace Day7
             }
             return sum;
         }
+
+        public static int FakeFactorial3(int n)
+        {
+            return (n * (n + 1)) / 2;
+        }
+
 
     }
 }
