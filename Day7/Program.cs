@@ -15,7 +15,7 @@ namespace Day7
         public static void ChallengeOne()
         {
             var sw = new Stopwatch();
-            const string INPUT_FILE_NAME = "InputDataChallenge2.txt";
+            const string INPUT_FILE_NAME = "InputDataChallenge1.txt";
             var inputData = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), INPUT_FILE_NAME));
             IEnumerable<string> stringData = inputData.Split(Environment.NewLine, StringSplitOptions.TrimEntries);
             IEnumerable<int> intData = stringData.SelectMany(s => s.Split(",").Select(i => int.Parse(i)));
