@@ -22,7 +22,7 @@ namespace Day9
             int?[][] intData = stringData.Select(s => s.Select(n => (int?)n - ZERO).ToArray()).ToArray();
             sw.Start();
 
-            var lowPoints = FindlowPoints(intData);
+            var lowPoints = FindLowPoints(intData);
             var sum = lowPoints.Sum(c => intData[c.Y][c.X]) + lowPoints.Count();
 
             sw.Stop();
@@ -30,7 +30,7 @@ namespace Day9
             Console.WriteLine($"Took {sw.ElapsedMilliseconds} ms after reading in the start data.");
         }
 
-        private static List<Coordinate> FindlowPoints(int?[][] data)
+        private static List<Coordinate> FindLowPoints(int?[][] data)
         {
             var result = new List<Coordinate>();
             for (var y = 0; y < data.Length; y++)
@@ -61,29 +61,24 @@ namespace Day9
             sw.Start();
 
             var topN = 3;
-            var sizes = new List<int>();
-            for (var y = 0; y < intData.Length; y++)
+            var basins = new List<List<Coordinate>>();
+            var lowPoints = FindLowPoints(intData);
+            foreach(var point in lowPoints)
             {
-                for (var x = 0; x < intData[y].Length; x++)
-                {
-                    if (intData[y][x] == 9)
-                    {
-                        continue;
-                    }
-
-                    var size = GetBasinSize(intData, new List<Coordinate>(), x, y);
-                    sizes.Add(size);
-                }
+                var basin = new List<Coordinate>();
+                FillBasin(intData, basin, point);
+                basins.Add(basin);
             }
-            var result = sizes.OrderBy(x => x).TakeLast(topN).ToArray();
+          
+            var result = basins.OrderByDescending(x => x.Count()).Take(topN).ToArray();
             var sum = 1;
             foreach (var r in result)
             {
-                sum *= r;
+                sum *= r.Count();
             }
 
             sw.Stop();
-            Console.WriteLine($"Answer is {string.Join(", ", result)} resulting in sum of {sum}");
+            Console.WriteLine($"Answer is {string.Join(", ", result.Select(r => r.Count()))} resulting in sum of {sum}");
             Console.WriteLine($"Took {sw.ElapsedMilliseconds} ms after reading in the start data.");
         }
 
@@ -92,7 +87,7 @@ namespace Day9
             var x = coordinate.X;
             var y = coordinate.Y;
             var currVal = data[y][x];
-            if(currVal == 9)
+            if (currVal == 9)
             {
                 return false;
             }
@@ -102,52 +97,51 @@ namespace Day9
             var neighbour4 = data.ElementAtOrDefault(y)?.ElementAtOrDefault(x - 1);
 
             var isLow = (!neighbour1.HasValue || currVal < neighbour1) &&
-                   (!neighbour2.HasValue || currVal < neighbour2) &&
-                   (!neighbour3.HasValue || currVal < neighbour3) &&
-                   (!neighbour4.HasValue || currVal < neighbour4);
+                        (!neighbour2.HasValue || currVal < neighbour2) &&
+                        (!neighbour3.HasValue || currVal < neighbour3) &&
+                        (!neighbour4.HasValue || currVal < neighbour4);
 
             return isLow;
         }
 
 
-        private static int GetBasinSize(int?[][] intData, List<Coordinate> visitedNodes, int x, int y)
+        private static void FillBasin(int?[][] intData, List<Coordinate> visitedNodes, Coordinate coord)
         {
+            var x = coord.X;
+            var y = coord.Y;
             if (visitedNodes.Any(xy => xy.Y == y && xy.X == x) || intData[y][x].Value == 9)
             {
-                return 0;
+                return;
             }
-            visitedNodes.Add(new Coordinate(x, y));
-
-            var currVal = intData[y][x].Value;
+           
+            visitedNodes.Add(coord);
 
             // fix neighbour being previous x y
-            var neighbour1 = intData.ElementAtOrDefault(y + 1)?.ElementAtOrDefault(x) ?? int.MaxValue;
-            var neighbour2 = intData.ElementAtOrDefault(y - 1)?.ElementAtOrDefault(x) ?? int.MaxValue;
-            var neighbour3 = intData.ElementAtOrDefault(y)?.ElementAtOrDefault(x + 1) ?? int.MaxValue;
-            var neighbour4 = intData.ElementAtOrDefault(y)?.ElementAtOrDefault(x - 1) ?? int.MaxValue;
-            var sum = 0;
-
-            if (neighbour1 - currVal == 1)
+            var neighbour1 = intData.ElementAtOrDefault(y + 1)?.ElementAtOrDefault(x);
+            var neighbour2 = intData.ElementAtOrDefault(y - 1)?.ElementAtOrDefault(x); 
+            var neighbour3 = intData.ElementAtOrDefault(y)?.ElementAtOrDefault(x + 1); 
+            var neighbour4 = intData.ElementAtOrDefault(y)?.ElementAtOrDefault(x - 1); 
+           
+            
+            if (neighbour1.HasValue)
             {
-                sum += GetBasinSize(intData, visitedNodes, y + 1, x);
+                FillBasin(intData, visitedNodes,new Coordinate(x, y + 1));
             }
 
-            if (neighbour2 - currVal == 1)
+            if (neighbour2.HasValue)
             {
-                sum += GetBasinSize(intData, visitedNodes, y - 1, x);
+                FillBasin(intData, visitedNodes, new Coordinate(x, y - 1));
             }
 
-            if (neighbour3 - currVal == 1)
+            if (neighbour3.HasValue)
             {
-                sum += GetBasinSize(intData, visitedNodes, y, x + 1);
+                FillBasin(intData, visitedNodes, new Coordinate(x + 1, y));
             }
 
-            if (neighbour4 - currVal == 1)
+            if (neighbour4.HasValue)
             {
-                sum += GetBasinSize(intData, visitedNodes, y, x - 1);
+                FillBasin(intData, visitedNodes, new Coordinate(x - 1, y));
             }
-
-            return 1 + sum;
         }
     }
 }
