@@ -39,11 +39,11 @@ namespace Day10
             {
                 try
                 {
-                    ParseLine(line, 0);
+                    ParseLine(line);
                 }
                 catch (ParseException ex)
                 {
-                    scoreCounters[ex.Value]++;
+                    scoreCounters[ex.ActualValue]++;
                     continue;
                 }
             }
@@ -63,44 +63,54 @@ namespace Day10
             ['<'] = '>',
         };
 
-        private static int ParseLine(string line, int index)
+        private static void ParseLine(string line)
         {
-            if (index > line.Length - 1)
+            var charStack = new Stack<char>();
+
+            foreach (var character in line)
             {
-                throw new ArgumentOutOfRangeException();
+                if (_openToCloseTagMap.ContainsKey(character))
+                {
+                    charStack.Push(character);
+                    continue;
+                }
+
+                var closingChar = _openToCloseTagMap[charStack.Pop()];
+                if(closingChar == character)
+                {
+                    continue;
+                }
+                throw new ParseException() { ActualValue = character, ExpectedValue = closingChar };
             }
-            var ogChar = line[index];
-            var currentChar = line[index];
-            if (_openToCloseTagMap.Values.Contains(currentChar))
+        }
+
+        private static char[] ParseLine2(string line)
+        {
+            var charStack = new Stack<char>();
+
+            foreach (var character in line)
             {
-                return index;
+                if (_openToCloseTagMap.ContainsKey(character))
+                {
+                    charStack.Push(character);
+                    continue;
+                }
+
+                var closingChar = _openToCloseTagMap[charStack.Peek()];
+                if (closingChar == character)
+                {
+                    charStack.Pop();
+                    continue;
+                }
             }
 
-            var closingChar = _openToCloseTagMap[currentChar];
-            while (currentChar != closingChar)
-            {
-                try
-                {
-                    index = ParseLine(line, ++index);
-                    currentChar = line[index];
-                    if(currentChar == ogChar)
-                    {
-                        return index;
-                    }
-                }
-                catch (ArgumentOutOfRangeException ex)
-                {
-                    throw new ParseException() { Value = _openToCloseTagMap[ogChar] };
-                }
-            }
-
-            return index;
+            return charStack.Select(c =>_openToCloseTagMap[c]).ToArray();
         }
 
         private class ParseException : Exception
         {
-            public int Index { get; set; }
-            public char Value { get; set; }
+            public char ActualValue { get; set; }
+            public char ExpectedValue { get; set; }
         }
 
         private static void ChallengeTwo()
@@ -110,10 +120,37 @@ namespace Day10
             var inputData = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), INPUT_FILE_NAME));
             IEnumerable<string> stringData = inputData.Split(Environment.NewLine, StringSplitOptions.TrimEntries);
             sw.Start();
+            var scoreMap = new Dictionary<char, int>()
+            {
+                [')'] = 1,
+                [']'] = 2,
+                ['}'] = 3,
+                ['>'] = 4,
+            };
+            var validLines = stringData.Where(s => { try { ParseLine(s); return true; } catch (ParseException) { return false; } });
+            var sums = new List<long>();
+            foreach (var line in validLines)
+            {
+                var result = ParseLine2(line);
+                if (!result.Any())
+                {
+                    continue;
+                }
 
+                long sum = 0;
+                foreach(var res in result)
+                {
+                    sum *= 5;
+                    sum += scoreMap[res];
+                }
 
+                sums.Add(sum);
+            }
+            var resultSum = sums.OrderBy(x => x).ElementAt((sums.Count - 1)  / 2);
 
             sw.Stop();
+            Console.WriteLine($"Score of auto complete = {resultSum}");
+
             Console.WriteLine($"Took {sw.ElapsedMilliseconds} ms after reading in the start data.");
         }
     }
